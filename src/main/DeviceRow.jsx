@@ -20,12 +20,13 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { devicesActions } from "../store";
 import {
-  formatAlarm,
   formatBoolean,
   formatPercentage,
   formatStatus,
   getStatusColor,
   getIgnitionColor,
+  getIgnitionColorText,
+  getStatusColorText,
 } from "../common/util/formatter";
 import { useTranslation } from "../common/components/LocalizationProvider";
 import { mapIconKey, mapIcons } from "../map/core/preloadImages";
@@ -75,7 +76,6 @@ const DeviceRow = ({ data, index, style }) => {
 
   const devicePrimary = useAttributePreference("devicePrimary", "name");
   const deviceSecondary = useAttributePreference("deviceSecondary", "");
-  console.log(item.category);
 
   const secondaryText = () => {
     let status;
@@ -92,7 +92,7 @@ const DeviceRow = ({ data, index, style }) => {
         <span
           className={
             classes[getIgnitionColor(position?.attributes?.ignition)] ||
-            classes[getStatusColor(item.status)]
+            classes[getStatusColor(item?.status)]
           }
         >
           {status}
@@ -108,16 +108,11 @@ const DeviceRow = ({ data, index, style }) => {
         disabled={!admin && item.disabled}
       >
         <ListItemAvatar>
-          {/*  <Avatar className={classes.icons}> */}
           <Avatar
             sx={{
               bgcolor:
-                (position?.attributes?.ignition ? "#4caf50" : "") ||
-                (item.status === "online"
-                  ? "#3370ff"
-                  : item.status === "offline"
-                  ? "red"
-                  : "null"),
+                getIgnitionColorText(position?.attributes?.ignition) ||
+                getStatusColorText(item?.status),
               width: 35,
               height: 35,
             }}
@@ -137,18 +132,6 @@ const DeviceRow = ({ data, index, style }) => {
         />
         {position && (
           <>
-            {position.attributes.hasOwnProperty("alarm") && (
-              <Tooltip
-                title={`${t("eventAlarm")}: ${formatAlarm(
-                  position.attributes.alarm,
-                  t
-                )}`}
-              >
-                <IconButton size="small">
-                  <ErrorIcon fontSize="small" className={classes.error} />
-                </IconButton>
-              </Tooltip>
-            )}
             {position.attributes.hasOwnProperty("ignition") && (
               <Tooltip
                 title={`${t("positionIgnition")}: ${formatBoolean(

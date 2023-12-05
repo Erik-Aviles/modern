@@ -149,6 +149,23 @@ export const getIgnitionColor = (position) => {
   }
   return null;
 };
+export const getStatusColorText = (status) => {
+  switch (status) {
+    case "online":
+      return "#3370ff";
+    case "offline":
+      return "#fe0000";
+    case "unknown":
+    default:
+      return "#9e9e9e";
+  }
+};
+export const getIgnitionColorText = (position) => {
+  if (position === true) {
+    return "#4caf50";
+  }
+  return null;
+};
 
 export const getBatteryStatus = (batteryLevel) => {
   if (batteryLevel >= 70) {

@@ -38,6 +38,12 @@ import { useCatch, useCatchCallback } from "../../reactHelper";
 import { useAttributePreference } from "../util/preferences";
 import BloqueoDialog from "./BloqueoDialog";
 import DesbloqueoDialog from "./DesbloqueoDialog";
+import {
+  formatStatus,
+  getIgnitionColorText,
+  getStatusColorText,
+} from "../util/formatter";
+import dayjs from "dayjs";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -252,6 +258,17 @@ const StatusCard = ({
                   <Typography variant="body2" color="textSecondary">
                     {device.name}
                   </Typography>
+                  <Typography
+                    variant="body2"
+                    color={
+                      getIgnitionColorText(position?.attributes?.ignition) ||
+                      getStatusColorText(device?.status)
+                    }
+                  >
+                    {device.status === "online" || !device.lastUpdate
+                      ? formatStatus(device.status, t)
+                      : dayjs(device.lastUpdate).fromNow()}
+                  </Typography>
                   <IconButton
                     size="small"
                     onClick={onClose}
@@ -319,7 +336,7 @@ const StatusCard = ({
                 >
                   <PublishIcon />
                 </IconButton>
-                {blocked ? (
+                {position?.attributes?.blocked ? (
                   <IconButton
                     onClick={() => setUnlocked(true)}
                     disabled={disableActions}
@@ -351,7 +368,7 @@ const StatusCard = ({
                     },${position.longitude}/@${
                       position.course
                     },17z/data=!3m1!4b1?entry=ttu`}
-                    disabled={disableActions || deviceReadonly}
+                    disabled={disableActions}
                     className={classes.indicationButton}
                   >
                     <DirectionsTwoToneIcon />

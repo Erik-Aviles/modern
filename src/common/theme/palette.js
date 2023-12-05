@@ -27,6 +27,10 @@ export default (server, darkMode) => ({
   blue: {
     main: "#3370ff",
   },
+  error: {
+    main: "#fe0000",
+  },
+
   medium: {
     main: amber[700],
   },
